@@ -134,6 +134,10 @@ export class ThreadService {
 
     updateSeen(thread, lastSeenId = thread.newestPersistentOfAllMessage?.id) {
         const lastReadIndex = thread.messages.findIndex((message) => message.id === lastSeenId);
+		
+		if(lastReadIndex === -1)
+			return
+		
         let newNeedactionCounter = 0;
         let newUnreadCounter = 0;
         for (const message of thread.messages.slice(lastReadIndex + 1)) {
