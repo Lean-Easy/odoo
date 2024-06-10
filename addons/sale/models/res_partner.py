@@ -77,15 +77,3 @@ class ResPartner(models.Model):
         group = self.env['sale.order']._read_group(domain, ['partner_id'], ['amount_to_invoice:sum'])
         for partner, amount_to_invoice_sum in group:
             partner.credit_to_invoice += amount_to_invoice_sum
-
-
-    def unlink(self):
-        # Unlink draft/cancelled SO so that the partner can be removed from database
-        self.env['sale.order'].sudo().search([
-            ('state', 'in', ['draft', 'cancel']),
-            '|', '|',
-            ('partner_id', 'in', self.ids),
-            ('partner_invoice_id', 'in', self.ids),
-            ('partner_shipping_id', 'in', self.ids),
-        ]).unlink()
-        return super().unlink()
